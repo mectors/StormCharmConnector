@@ -12,17 +12,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.yaml.snakeyaml.Loader;
 import org.yaml.snakeyaml.Yaml;
+
+import com.ubuntu.stormdeployer.Topologies;
+import com.ubuntu.stormdeployer.TopologiesConstructor;
 
 /**
  * @author maarten
  * This class reads a yaml file called connections.yaml that is located in /opt/storm/latest/conf.
  * The subordinate StormDeployer charm will update this file with the appropriate connections.
  * Expected format for connections.yaml
- * type:\n
+ * type: postgress\n
  *    - {host: testip,port: 123,user: test,password: ok}\n
  *    - {host: testip2,port: 345}\n
- * type2:\n
+ * type: mysql\n
  *    - {host: testip,port: 123,user: test,password: ok}\n
  *    - {host: testip2,port: 345}\n
  */
@@ -30,12 +34,8 @@ public abstract class AbstractStormCharmConnector implements
 		StormCharmConnector {
 	private String type;
 	private static final String CONNECTIONS = "/opt/storm/latest/conf/connections.yaml";
-	private static final String HOST="host";
-	private static final String PORT="port";
-	private static final String USER="user";
-	private static final String PASSWORD="password";
 	private long lastmodified;
-	private List<StormCharmConnection> connections;
+	private List<Instance> connections;
 	
 	public AbstractStormCharmConnector(String type)
 	{
@@ -45,7 +45,7 @@ public abstract class AbstractStormCharmConnector implements
 	/* (non-Javadoc)
 	 * @see com.ubuntu.stormcharmconnector.StormCharmConnector#getConnections()
 	 */
-	public List<StormCharmConnection> getConnections() throws NoConnectionsException {
+	public List<Instance> getConnections() throws NoConnectionsException {
 		FileReader fr=null;
 		try {
 			File file = new File(CONNECTIONS);
@@ -71,31 +71,23 @@ public abstract class AbstractStormCharmConnector implements
 		}
 	}
 	
-	public List<StormCharmConnection> getConnections(Reader connectionsfile) throws NoConnectionsException
+	public List<Instance> getConnections(Reader connectionsfile) throws NoConnectionsException
 	{
-		List<StormCharmConnection> connections = new ArrayList<StormCharmConnection>();
-		Yaml yaml = new Yaml();
+
+
+		StormConnectorConstructor constructor = new StormConnectorConstructor( StormConnector.class );
+		Loader loader = new Loader(constructor);
+		Yaml yaml = new Yaml(loader);
+		StormConnector st = null;
 		try
 		{
-			@SuppressWarnings("unchecked")
-			Map<String,List<Map<String,Object>>> map = (Map<String,List<Map<String,Object>>>) yaml.load(connectionsfile);
-			@SuppressWarnings("unchecked")
-			List<Map<String,Object>> conns = map.get(type);
-
-			for(Map<String,Object> conn:conns)
-			{
-				String host = (String)conn.get(HOST);
-				Integer port = (Integer)conn.get(PORT);
-				String user = (String)conn.get(USER);
-				String password = (String)conn.get(PASSWORD);
-				StormCharmConnection stormconn = new StormCharmConnection(host,port,user,password);
-				connections.add(stormconn);
-			}
+			st = (StormConnector) yaml.load(connectionsfile);
+			
 		}catch(Exception e)
 		{
 			throw new NoConnectionsException("Connections file not found or not readable",e);
 		}
-		return connections;
+		return st.getInstances(type);
 	}
 
 }

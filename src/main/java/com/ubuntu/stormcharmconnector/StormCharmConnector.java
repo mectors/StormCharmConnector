@@ -7,8 +7,8 @@ import java.util.List;
  * Get a list of StormCharmConnection 
  * Usage:
  * StormCharmConnector connector = new CassandraStormConnector();
- * List<StormCharmConnection> connections = connector.getConnections();
- * StormCharmConnection connection = connections.get(0);
+ * List<Instance> connections = connector.getConnections();
+ * Instance connection = connections.get(0);
  * String host = connection.getHost();
  * Integer port = connection.getPort():
  * String user = connection.getUser();
@@ -16,6 +16,6 @@ import java.util.List;
  */
 public interface StormCharmConnector 
 {
-	public List<StormCharmConnection> getConnections() throws NoConnectionsException;
-	public List<StormCharmConnection> getConnections(Reader reader) throws NoConnectionsException;
+	public List<Instance> getConnections() throws NoConnectionsException;
+	public List<Instance> getConnections(Reader reader) throws NoConnectionsException;
 }
