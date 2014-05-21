@@ -105,7 +105,7 @@ public class StormDeployerTest extends TestCase {
     	    	"  jar: jar\n"+
     	    	"  topologyclass: class\n" +
     	    	"  packaging: mvn package\n"+
-    	    	"  repository: repo\n"+
+    	    	"  repository: https://test.com/test.storm\n"+
     	    	"  scriptbeforepackaging: script1\n"+
     	    	"  scriptbeforedeploying: script2\n"+
     	    	"- datasources:\n"+
@@ -119,6 +119,7 @@ public class StormDeployerTest extends TestCase {
     	out.flush();
     	List<Topology> topologies = sd.readTopologies("/tmp/test.txt");
     	assertEquals("class",topologies.get(0).getTopologyclass());
+    	assertEquals("https://test.com/test.storm",topologies.get(0).getRepository());    	
     	out.close();
     	new File("/tmp/test.txt").delete();
     }

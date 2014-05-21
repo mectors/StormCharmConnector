@@ -192,8 +192,10 @@ public class StormDeployer {
 			out = new PrintStream(args[1]);
 		}
 		StormDeployer sd = new StormDeployer();
+		File stormFile = new File("/tmp/stormdeploy"+System.nanoTime());
+		sd.wget(new URL(args[0]),stormFile);
 
-		for(Topology topology:sd.readTopologies(args[0]))
+		for(Topology topology:sd.readTopologies(stormFile.getAbsolutePath()))
 		{
             sd.deploy("/opt/storm/latest/bin/storm jar",topology, out);
 		}
