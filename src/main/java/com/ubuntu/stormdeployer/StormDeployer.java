@@ -19,7 +19,6 @@ import org.apache.maven.cli.MavenCli;
 import org.yaml.snakeyaml.Loader;
 import org.yaml.snakeyaml.Yaml;
 
-import com.github.axet.wget.WGet;
 
 /**
  * @author maarten
