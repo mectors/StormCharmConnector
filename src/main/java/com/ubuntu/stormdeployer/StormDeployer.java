@@ -89,12 +89,15 @@ public class StormDeployer {
             git(repo, topologyDir,out);
             
             // Run before packaging script
-            File beforePackageDir = new File(topologyDir.getAbsolutePath()+"/package");
-            beforePackageDir.mkdir();
-            File packageScript = new File(beforePackageDir.getAbsolutePath()+"/script");
-            wget(new URL(beforePackage), packageScript);
-            execute("chmod u+x "+packageScript.getAbsolutePath(), out);
-            execute(packageScript.getAbsolutePath(), out);
+            if(beforePackage != null)
+            {
+	            File beforePackageDir = new File(topologyDir.getAbsolutePath()+"/package");
+	            beforePackageDir.mkdir();
+	            File packageScript = new File(beforePackageDir.getAbsolutePath()+"/script");
+	            wget(new URL(beforePackage), packageScript);
+	            execute("chmod u+x "+packageScript.getAbsolutePath(), out);
+	            execute(packageScript.getAbsolutePath(), out);
+            }
             
             for(DataSource ds:dss)
             {
@@ -106,13 +109,15 @@ public class StormDeployer {
             cli.doMain(new String[]{"package"}, topologyDir.getAbsolutePath(), out, out);
             
             // Run before deploying script
-            File beforeDeployDir = new File(topologyDir.getAbsolutePath()+"/deploy");
-            beforeDeployDir.mkdir();
-            File deployScript = new File(beforeDeployDir.getAbsolutePath()+"/script");
-            wget(new URL(beforeDeploy), deployScript);
-            execute("chmod u+x "+deployScript.getAbsolutePath(), out);
-            execute(deployScript.getAbsolutePath(), out);
-            
+            if(beforeDeploy != null)
+            {
+	            File beforeDeployDir = new File(topologyDir.getAbsolutePath()+"/deploy");
+	            beforeDeployDir.mkdir();
+	            File deployScript = new File(beforeDeployDir.getAbsolutePath()+"/script");
+	            wget(new URL(beforeDeploy), deployScript);
+	            execute("chmod u+x "+deployScript.getAbsolutePath(), out);
+	            execute(deployScript.getAbsolutePath(), out);
+            }
             
             // Deploy the topology
             deploy(command, topologyDir.getAbsolutePath() + "/target/" + jar,topologyclass, name, out);
@@ -197,6 +202,7 @@ public class StormDeployer {
 
 		for(Topology topology:sd.readTopologies(stormFile.getAbsolutePath()))
 		{
+			out.append("Deploying topology:"+topology.getName());
             sd.deploy("/opt/storm/latest/bin/storm jar",topology, out);
 		}
 	}
