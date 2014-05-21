@@ -99,9 +99,12 @@ public class StormDeployer {
 	            execute(packageScript.getAbsolutePath(), out);
             }
             
-            for(DataSource ds:dss)
+            if(dss != null)
             {
-            	applyDataSource(ds,topologyDir,out);
+	            for(DataSource ds:dss)
+	            {
+	            	applyDataSource(ds,topologyDir,out);
+	            }
             }
             
             // Todo implement alternative packaging and subdirectory support for Maven
