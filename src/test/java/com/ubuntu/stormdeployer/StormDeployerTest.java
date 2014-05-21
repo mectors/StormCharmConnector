@@ -136,7 +136,7 @@ public class StormDeployerTest extends TestCase {
     	sd.deploy("echo /opt/storm/latest/bin/storm jar","test.jar", "com.abc.Test", "mytoplogy", ps); 
     	String output = new String(out.toString());
     	//System.out.println(output);
-    	assertEquals("/opt/storm/latest/bin/storm jar test.jar com.abc.Test mytoplogy\n",output);
+    	assertEquals("Deploying:echo /opt/storm/latest/bin/storm jar test.jar com.abc.Test mytoplogy\n/opt/storm/latest/bin/storm jar test.jar com.abc.Test mytoplogy\n",output);
     	ps.close();
     	out.close();
     }
