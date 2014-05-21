@@ -46,9 +46,10 @@ public class StormUndeployer {
 	
 
 	
-	public void undeploy(String undeployment,String topology, PrintStream out) throws Exception
+	public void undeploy(String undeployment,String directory, String topology, PrintStream out) throws Exception
 	{
 		execute(undeployment + " " + topology, out);
+        execute("rm -rf "+directory,out);
 	}
 	/**
 	 * @param args
@@ -71,7 +72,7 @@ public class StormUndeployer {
 	            
 	        // Uneploy the topology
             StormUndeployer su = new StormUndeployer();
-	        su.undeploy("/opt/storm/latest/bin/storm kill", args[0],out);
+	        su.undeploy("/opt/storm/latest/bin/storm kill","/tmp/stormdeployertmp/"+args[0], args[0],out);
 
             
 		}

@@ -254,7 +254,11 @@ public class StormDeployerTest extends TestCase {
     	OutputStream out = new ByteArrayOutputStream();
     	PrintStream ps = new PrintStream(out);
     	StormUndeployer su = new StormUndeployer();
-    	su.undeploy("echo undeployment", "topology", ps);
+    	File test = new File("/tmp/deletetest");
+    	test.mkdir();
+    	su.undeploy("echo undeployment","/tmp/deletetest", "topology", ps);
+    	if(test.exists())
+    		fail("Directory not delete");
     	String output = new String(out.toString());
     	assertEquals("undeployment topology\n",output);
     	ps.close();

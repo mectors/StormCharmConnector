@@ -27,11 +27,6 @@
     	<version>1.5</version>
     </dependency>
     <dependency>
-  <groupId>com.github.axet</groupId>
-  <artifactId>wget</artifactId>
-  <version>1.2.11</version>
-</dependency>
-    <dependency>
         <groupId>org.apache.maven</groupId>
         <artifactId>maven-embedder</artifactId>
         <version>3.1.1</version>
